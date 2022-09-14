@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
 const bcrypt = require("bcrypt");
 const shortid = require("shortid");
+const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
 
 const UserQueries = require("../models/user.model");
@@ -53,7 +54,7 @@ const loginUser = async (email, password) => {
 		throw new ApiError(httpStatus.UNAUTHORIZED, "User doesn't exist");
 	}
 
-	if (!comparePassword(password, userInDb.password)) {
+	if (!(await comparePassword(password, userInDb.password))) {
 		throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect password");
 	}
 
@@ -93,6 +94,7 @@ const loginUser = async (email, password) => {
 			subject: "OTP for email verification",
 			html: `<h1>OTP ${OTP}</h1>`,
 		});
+		throw new ApiError(httpStatus.UNAUTHORIZED, "Please verify your email");
 	}
 
 	// gen token and send token
