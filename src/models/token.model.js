@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const TokenSchema = new mongoose.Schema(
 	{
 		user_id: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: String,
 			required: true,
 		},
 		token_type: {

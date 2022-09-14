@@ -30,6 +30,7 @@ app.get("/", async (req, res) => {
 });
 
 // routes
+require("./routes")(app);
 
 // handling invalid requests
 app.use((req, res, next) => {
