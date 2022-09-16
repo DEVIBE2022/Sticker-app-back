@@ -19,14 +19,16 @@ const loginUser = catchAsync(async (req, res, next) => {
 const registerUser = catchAsync(async (req, res, next) => {
 	const { email, password, name } = req.body;
 
+	console.log(email, password, name);
+
 	// register user
-	await AuthServices.registerUser(email, password, name);
+	const registeredUser = await AuthServices.registerUser(email, password, name);
 
 	return res.status(httpStatus.CREATED).json({
 		code: httpStatus.CREATED,
 		status: httpStatus[httpStatus.CREATED],
 		message: "User registered successfully",
-		data: null,
+		data: registeredUser,
 	});
 });
 
@@ -47,13 +49,13 @@ const verifyOtp = catchAsync(async (req, res, next) => {
 	const { otp, otpType, user_id } = req.body;
 
 	// verify the otp
-	await AuthServices.verifyOtp(otp, otpType, user_id);
+	const verifiedUser = await AuthServices.verifyOtp(otp, otpType, user_id);
 
 	return res.status(httpStatus.OK).json({
 		code: httpStatus.OK,
 		status: httpStatus[httpStatus.OK],
 		message: "Verified otp",
-		data: null,
+		data: verifiedUser,
 	});
 });
 

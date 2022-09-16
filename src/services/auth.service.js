@@ -156,6 +156,8 @@ const registerUser = async (email, password, name) => {
 		html: `<h1>OTP : ${OTP}</h1>`,
 	});
 	// that's all
+
+	return newUserInDb;
 };
 
 // generate token for forgetPassword and isVerified and also sent in mail
@@ -170,11 +172,17 @@ const verifyOtp = async (otp, otpType, user_id) => {
 	if (!tokenInDb) {
 		throw new ApiError(httpStatus.NOT_FOUND, "No such token found");
 	}
-
+	let userInDb;
 	if (otpType === "EMAIL_VERIFY" && otp === tokenInDb.token) {
-		await UserQueries.findByIdAndUpdate(user_id, {
-			isVerified: true,
-		});
+		userInDb = await UserQueries.findByIdAndUpdate(
+			user_id,
+			{
+				isVerified: true,
+			},
+			{
+				new: true,
+			}
+		);
 		await TokenQueries.findByIdAndDelete(tokenInDb._id);
 	} else if (otpType === "FORGET_PASSWORD") {
 		// implement it tomorrow
@@ -184,6 +192,8 @@ const verifyOtp = async (otp, otpType, user_id) => {
 			"Not authorized for further actions"
 		);
 	}
+
+	return userInDb;
 };
 
 module.exports = {

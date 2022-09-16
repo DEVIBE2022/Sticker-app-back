@@ -22,7 +22,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 app.use(mongoSanitize());
 
-app.use(cors());
+// app.use(cors());
+// app.options("*", cors());
+// app.use((_, res, next) => {
+// 	res.setHeader("Access-Control-Allow-Origin", "*");
+// 	res.setHeader(
+// 		"Access-Control-Allow-Methods",
+// 		"GET, POST, PUT, PATCH, DELETE"
+// 	);
+// 	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+// 	next();
+// });
+
+// res.header( "Access-Control-Allow-Origin" );
+app.use(function (req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Methods",
+		"GET, POST, OPTIONS, PUT, PATCH, DELETE"
+	);
+	res.header(
+		"Access-Control-Allow-Headers",
+		"x-access-token, Origin, X-Requested-With, Content-Type, Accept"
+	);
+	next();
+});
 
 // welcome routes
 app.get("/", async (req, res) => {
